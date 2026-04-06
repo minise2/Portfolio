@@ -1897,7 +1897,7 @@
           <p class="hero-label">Mechanical Engineering · IST Lisbon</p>
           <h1>Lourenço<span>Evangelista</span></h1>
           <p class="hero-sub">
-            Third-year student at Instituto Superior Técnico,
+            Third-year student at Instituto Superior Técnico,<br>
             <span class="hero-role-wrap" aria-live="polite" aria-atomic="true">a <span class="hero-role-word"
                 id="heroRole">passionate</span> engineer</span>
             focused on vehicle dynamics, automotive engineering, and motorsport.
@@ -2030,11 +2030,6 @@
 
       </div>
 
-      <!-- ADD PROJECT BUTTON -->
-      <button class="add-project-btn">
-        <span style="font-size:20px;">+</span>
-        Add New Project
-      </button>
     </section>
 
     <!-- ABOUT -->
@@ -2170,29 +2165,6 @@
   <!-- SCROLL TO TOP -->
   <button id="scroll-top" aria-label="Scroll to top">↑</button>
 
-  <!-- ADD PROJECT MODAL -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <div class="modal-title">New Project</div>
-      <div class="form-group">
-        <label class="form-label">Project Title</label>
-        <input type="text" class="form-input" id="newProjectTitle" placeholder="e.g. Suspension Geometry Optimisation">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Category / Tag</label>
-        <input type="text" class="form-input" id="newProjectTag" placeholder="e.g. CAD · 2025">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Description</label>
-        <textarea class="form-textarea" id="newProjectDesc"
-          placeholder="Describe the project, your role, and the outcome..."></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-primary">Add Project</button>
-        <button class="btn btn-ghost">Cancel</button>
-      </div>
-    </div>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/joshjs@1.0.0/dist/josh.min.js"></script>
   <script>
@@ -2232,10 +2204,10 @@
     let roleIdx = 0;
     const roleEl = document.getElementById('heroRole');
     if (roleEl) {
-      const TYPE_SPEED   = 85;   // ms between each character typed
+      const TYPE_SPEED = 85;   // ms between each character typed
       const DELETE_SPEED = 50;   // ms between each character deleted
-      const PAUSE_READ   = 2000; // ms to read the word before deleting
-      const PAUSE_NEXT   = 200;  // ms pause after full delete before typing
+      const PAUSE_READ = 2000; // ms to read the word before deleting
+      const PAUSE_NEXT = 200;  // ms pause after full delete before typing
 
       function typeWord(word, done) {
         let i = 0;
@@ -2323,68 +2295,6 @@
       }
     });
 
-    // MODAL
-    let projectCount = 3;
-    function openModal() { document.getElementById('modalOverlay').classList.add('open'); }
-    function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-
-    document.getElementById('modalOverlay').addEventListener('click', function (e) {
-      if (e.target === this) closeModal();
-    });
-    document.getElementById('projectsGrid').nextElementSibling.addEventListener('click', openModal);
-
-    function addProject() {
-      const title = document.getElementById('newProjectTitle').value.trim();
-      const tag = document.getElementById('newProjectTag').value.trim();
-      const desc = document.getElementById('newProjectDesc').value.trim();
-      if (!title) return;
-      projectCount++;
-      const num = String(projectCount).padStart(2, '0');
-      const card = document.createElement('div');
-      card.className = 'project-card josh-js';
-      card.dataset.joshAnimName = 'zoomIn';
-      card.dataset.joshDuration = '900ms';
-      card.dataset.joshAnimDelay = '0.15s';
-      card.innerHTML = `
-      <div class="project-header">
-        <div class="project-meta">
-          <span class="project-index">${num}</span>
-          <div class="project-info">
-            <h3>${title}</h3>
-            <div class="project-tag">${tag || 'Project'}</div>
-          </div>
-        </div>
-        <span class="project-toggle">+</span>
-      </div>
-      <div class="project-body">
-        <div class="project-content">
-          <p class="project-description">${desc || 'Description coming soon.'}</p>
-          <div class="project-actions">
-            <div class="file-upload-area">
-              <input type="file" accept=".pdf,.docx,.xlsx,.zip,.png,.jpg">
-              <div class="file-upload-icon">📎</div>
-              <div class="file-upload-text">Attach file</div>
-              <div class="file-name-display"></div>
-            </div>
-          </div>
-        </div>
-      </div>`;
-      document.getElementById('projectsGrid').appendChild(card);
-      bindProjectCardTilt(card);
-      // Reset form
-      document.getElementById('newProjectTitle').value = '';
-      document.getElementById('newProjectTag').value = '';
-      document.getElementById('newProjectDesc').value = '';
-      closeModal();
-    }
-
-    // Wire modal buttons
-    document.querySelector('.modal-actions .btn-primary').addEventListener('click', addProject);
-    document.querySelector('.modal-actions .btn-ghost').addEventListener('click', closeModal);
-
-    // Keyboard close
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
     // ── SECTION TITLE CHAR SPLIT ──
     document.querySelectorAll('.section-title').forEach(el => {
       const text = el.textContent.trim();
@@ -2433,7 +2343,12 @@
       const card = header.closest('.project-card');
       const body = header.nextElementSibling;
       const isOpen = body.classList.contains('open');
-      document.querySelectorAll('.project-card').forEach(c => c.classList.remove('expanded'));
+      document.querySelectorAll('.project-card').forEach(c => {
+        c.classList.remove('expanded');
+        // Always clear tilt vars so no card gets stuck at a frozen angle
+        c.style.setProperty('--tilt-x', '0deg');
+        c.style.setProperty('--tilt-y', '0deg');
+      });
       if (!isOpen) card.classList.add('expanded');
     });
 
@@ -2570,7 +2485,7 @@
         videoEl.play().catch(() => { });
         // Slow fade-in over 4 seconds for maximum calm
         videoEl.style.transition = 'opacity 4s ease';
-        videoEl.style.opacity = '0.22';
+        videoEl.style.opacity = '0.30';
       }
 
       if (Hls.isSupported()) {
